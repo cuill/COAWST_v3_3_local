@@ -166,8 +166,9 @@
 !
 ! Convert bed mass from kg/sq.m to kg in each cell
 !
-              cff=bed_mass(i,j,1,nnew,ised)*om_r(i,j)*on_r(i,j)
-              cff1=kN_N*kfac_marsh(ng)*dt(ng)*bed_frac(i,j,1,ised)
+              cff=bed_mass(i,j,1,nnew,ised)*bed_frac(i,j,1,ised)*       &
+                                             om_r(i,j)*on_r(i,j)
+              cff1=kN_N*kfac_marsh(ng)*dt(ng)
 !
 !---------------------------------------------------------------------
 ! Add bed mass to sea cell providing horizontal face thrust 
