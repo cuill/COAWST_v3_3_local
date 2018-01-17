@@ -178,10 +178,10 @@
               cff2=half*(one-SIGN(one,Thrust_xi(i,j  )))
               cff3=half*(one+SIGN(one,Thrust_xi(i+1,j)))
               cff4=cff1*                                                &
-     &                  ( Thrust_xi(i,j  )*bed_frac(i-1,j,1,ised)*      &
-     &                                         on_u(i,j  )*cff2         &
-     &                   -Thrust_xi(i+1,j)*bed_frac(i+1,j,1,ised)*      &
-     &                                         on_u(i+1,j)*cff3  )     
+     &                  ( Thrust_xi(i+1,j  )*bed_frac(i+1,j,1,ised)*    &
+     &                                         on_u(i+1,j  )*cff3       &
+     &                   -Thrust_xi(i,j)*bed_frac(i-1,j,1,ised)*        &
+     &                                         on_u(i,j)*cff2     )
 !
               cff=cff+cff4
 !
@@ -194,7 +194,7 @@
               cff3=half*(one-SIGN(one,Thrust_xi(i+1,j)))
               cff4=cff1*bed_frac(i,j,1,ised)*                           &
      &                  ( Thrust_xi(i,j  )*on_u(i,j  )*cff2             &
-     &                   -Thrust_xi(i+1,j)*on_u(i+1,j)*cff3      )      
+     &                   -Thrust_xi(i+1,j)*on_u(i+1,j)*cff3       )
               cff=cff-cff4
 !
 !---------------------------------------------------------------------
