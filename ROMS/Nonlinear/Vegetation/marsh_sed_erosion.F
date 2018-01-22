@@ -160,8 +160,8 @@
 !
 # include "set_bounds.h"
 !
-        J_LOOP: DO j=Jstr,Jend
-          DO i=Istr,Iend
+        J_LOOP: DO j=Jstr-1,Jend+1
+          DO i=Istr-1,Iend+1
             SED_LOOP: DO ised=1,NST
 !
 ! Convert bed mass from kg/sq.m to kg in each cell
@@ -173,6 +173,7 @@
 ! Add bed mass to sea cell providing horizontal face thrust 
 ! you cannot add more than the available amount from adjacent cell 
 ! how to take into account the fraction of bed mass coming into the cell
+! Rules-cff4 is mass and can never be negative 
 !---------------------------------------------------------------------
 !
               cff2=half*(one-SIGN(one,Thrust_xi(i,j  )))
@@ -181,10 +182,10 @@
      &                  ( Thrust_xi(i+1,j  )*bed_frac(i+1,j,1,ised)*    &
      &                                         on_u(i+1,j  )*cff3       &
      &                   -Thrust_xi(i,j)*bed_frac(i-1,j,1,ised)*        &
-     &                                         on_u(i,j)*cff2     )
+     &                                         on_u(i,j)*cff2     )     
 !
               cff=cff+cff4
-!
+! 
 !---------------------------------------------------------------------
 ! Subtract bed mass from marsh cell if thrust acts on horizontal face 
 ! Marsh cell
@@ -194,7 +195,7 @@
               cff3=half*(one-SIGN(one,Thrust_xi(i+1,j)))
               cff4=cff1*bed_frac(i,j,1,ised)*                           &
      &                  ( Thrust_xi(i,j  )*on_u(i,j  )*cff2             &
-     &                   -Thrust_xi(i+1,j)*on_u(i+1,j)*cff3       )
+     &                   -Thrust_xi(i+1,j)*on_u(i+1,j)*cff3       )     
               cff=cff-cff4
 !
 !---------------------------------------------------------------------
@@ -284,25 +285,25 @@
 !  purposes only.
 !---------------------------------------------------------------------
 !
-      CALL bc_r2d_tile (ng, tile,                                       &
-     &                  LBi, UBi, LBj, UBj,                             &
-     &                  marsh_mask)
-      DO ised=1,NST
-        CALL bc_r2d_tile (ng, tile,                                     &
-     &                    LBi, UBi, LBj, UBj,                           &
-     &                    marsh_flux_out(:,:,ised))
-        CALL bc_r3d_tile (ng, tile,                                     &
-     &                    LBi, UBi, LBj, UBj, 1, Nbed,                  &
-     &                    bed_frac(:,:,:,ised))
-        CALL bc_r3d_tile (ng, tile,                                     &
-     &                    LBi, UBi, LBj, UBj, 1, Nbed,                  &
-     &                    bed_mass(:,:,:,nnew,ised))
-      END DO
-      DO i=1,MBEDP
-        CALL bc_r3d_tile (ng, tile,                                     &
-     &                    LBi, UBi, LBj, UBj, 1, Nbed,                  &
-     &                    bed(:,:,:,i))
-      END DO
+!      CALL bc_r2d_tile (ng, tile,                                       &
+!     &                  LBi, UBi, LBj, UBj,                             &
+!     &                  marsh_mask)
+!      DO ised=1,NST
+!        CALL bc_r2d_tile (ng, tile,                                     &
+!     &                    LBi, UBi, LBj, UBj,                           &
+!     &                    marsh_flux_out(:,:,ised))
+!        CALL bc_r3d_tile (ng, tile,                                     &
+!     &                    LBi, UBi, LBj, UBj, 1, Nbed,                  &
+!     &                    bed_frac(:,:,:,ised))
+!        CALL bc_r3d_tile (ng, tile,                                     &
+!     &                    LBi, UBi, LBj, UBj, 1, Nbed,                  &
+!     &                    bed_mass(:,:,:,nnew,ised))
+!      END DO
+!      DO i=1,MBEDP
+!        CALL bc_r3d_tile (ng, tile,                                     &
+!     &                    LBi, UBi, LBj, UBj, 1, Nbed,                  &
+!     &                    bed(:,:,:,i))
+!      END DO
 # ifdef DISTRIBUTE
       CALL mp_exchange2d (ng, tile, iNLM, 1,                            &
      &                        LBi, UBi, LBj, UBj,                       &
