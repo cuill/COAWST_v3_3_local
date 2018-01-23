@@ -91,7 +91,6 @@
 # endif
 # if defined SED_MORPH
      &                   SEDBED(ng) % bed_thick,                        &
-     &                   SEDBED(ng) % bed_poros,                        &
 # endif
 # if defined MARSH_SED_EROSION 
      &                   VEG(ng) % marsh_mask,                          &
@@ -127,7 +126,6 @@
 # endif
 # if defined SED_MORPH
      &                         bed_thick,                               &
-     &                         bed_poros,                               &
 # endif
 # if defined MARSH_SED_EROSION 
      &                         marsh_mask,                              &
@@ -170,7 +168,6 @@
 #  endif
 #  if defined SED_MORPH
       real(r8), intent(inout):: bed_thick(LBi:,LBj:,:)
-      real(r8), intent(inout):: bed_poros(LBi:,LBj:)
 #  endif
 #  if defined MARSH_SED_EROSION
       real(r8), intent(in):: marsh_mask(LBi:,LBj:)
@@ -201,7 +198,6 @@
 #  endif
 #  if defined SED_MORPH
       real(r8), intent(inout):: bed_thick(LBi:UBi,LBj:UBj,2)
-      real(r8), intent(inout):: bed_poros(LBi:UBi,LBj:UBj)
 #  endif
 #  if defined MARSH_SED_EROSION 
       real(r8), intent(inout):: marsh_mask(LBi:UBi,LBj:UBj)
