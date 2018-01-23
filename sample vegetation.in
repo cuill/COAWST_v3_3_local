@@ -1,0 +1,30 @@
+    NVEG   == 1
+
+    CD_VEG == 1.0d0
+
+    E_VEG == 1.0d9
+
+    VEG_MASSDENS  == 700.0d0
+
+    VEGHMIXCOEF == 0.1d0
+
+    KFAC_MARSH == 0.6d-8
+
+    DCRIT_MARSH == 0.0d0
+
+! Logical switches (TRUE/FALSE) to activate writing of vegetation fields
+! into HISTORY output file: [1:NVEG,Ngrids].
+
+Hout(ipdens)   == F       ! Plant_density      Density of the plant for each vegetation
+Hout(iphght)   == F       ! Plant_height       Height of the plant for each vegetation
+Hout(ipdiam)   == F       ! Plant_diameter     Diameter of the plant for each vegetation
+Hout(ipthck)   == F       ! Plant_thickness    Thickness of the plant for each vegetation
+Hout(ipagbm)   == F       ! Plant_agb          Above ground plant biomass
+Hout(ipbgbm)   == F       ! Plant_bgb          Below ground plant biomass
+Hout(idWdvg)   == F       ! Dissip_veg         Wave dissipation due to vegetation
+!
+ Hout(idTims)   == T       ! marsh_mask         Store masking marsh from marsh cells
+ Hout(idTtot)   == T       ! Thrust_total       Total thrust from all direction due to waves
+ Hout(idTmfo)   == T  T    ! marsh_flux_out     Marsh sediment flux out from marsh cells
+ Hout(idTmmr)   == T       ! marsh_retreat      Amount of marsh retreat from all directions
+!
