@@ -2,7 +2,7 @@
 #if defined FOUR_DVAR || defined VERIFICATION
       SUBROUTINE def_mod (ng)
 !
-!svn $Id: def_mod.F 873 2017-10-05 20:27:10Z arango $
+!svn $Id: def_mod.F 880 2017-11-15 22:04:38Z arango $
 !================================================== Hernan G. Arango ===
 !  Copyright (c) 2002-2017 The ROMS/TOMS Group                         !
 !    Licensed under a MIT/X style license                              !
@@ -33,6 +33,7 @@
 # endif
       USE strings_mod,    ONLY : find_string
       USE strings_mod,    ONLY : FoundError
+      USE strings_mod,    ONLY : uppercase
 !
       implicit none
 !
@@ -69,7 +70,7 @@
       real(r8) :: Aval(6)
 
       character (len=40 )  :: Aname, AttName(2)
-      character (len=80 )  :: type
+      character (len=80 )  :: string
       character (len=120)  :: Vinfo(Natt)
       character (len=256)  :: ncname
       character (len=2048) :: AttValue(2)
@@ -169,12 +170,12 @@
      &                 __FILE__)) RETURN
 
         status=def_dim(ng, iNLM, DAV(ng)%ncid, ncname, 'state_var',     &
-     &                 NstateVar(ng), stateDim)
+     &                 NobsVar(ng), stateDim)
         IF (FoundError(exit_flag, NoError, __LINE__,                    &
      &                 __FILE__)) RETURN
 
         status=def_dim(ng, iNLM, DAV(ng)%ncid, ncname, 'cost_var',      &
-     &                 NstateVar(ng)+1, stateDimp)
+     &                 NobsVar(ng)+1, stateDimp)
         IF (FoundError(exit_flag, NoError, __LINE__,                    &
      &                 __FILE__)) RETURN
 
@@ -240,9 +241,45 @@
 !  File type.
 !
           IF (exit_flag.eq.NoError) THEN
-            type='ROMS/TOMS 4DVAR output observation processing file'
+            string='ROMS/TOMS 4DVAR output observation processing file'
             status=nf90_put_att(DAV(ng)%ncid, nf90_global,              &
-     &                          'type', TRIM(type))
+     &                          'type', TRIM(string))
+            IF (FoundError(status, nf90_noerr, __LINE__,                &
+     &                     __FILE__)) THEN
+              WRITE (stdout,50) 'type', TRIM(ncname)
+              exit_flag=3
+              ioerror=status
+            END IF
+          END IF
+!
+!  Algorithm.
+!
+          IF (exit_flag.eq.NoError) THEN
+# if defined ARRAY_MODES
+            string=uppercase('array_modes')
+# elif defined IS4DVAR
+            string=uppercase('is4dvar')
+# elif defined IS4DVAR_SENSITIVITY
+            string=uppercase('is4dvar_sensitivity')
+# elif defined TL_W4DPSAS
+            string=uppercase('tl_w4dpsas')
+# elif defined TL_W4DVAR
+            string=uppercase('tl_w4dvar')
+# elif defined VERIFICATION
+            string=uppercase('verification')
+# elif defined W4DPSAS
+            string=uppercase('w4dpsas')
+# elif defined W4DPSAS_SENSITIVITY
+            string=uppercase('w4dpsas_sensitivity')
+# elif defined W4DVAR
+            string=uppercase('w4dvar')
+# elif defined W4DVAR_SENSITIVITY
+            string=uppercase('w4dvar_sensitivity')
+# else
+            string=uppercase('four_dvar')
+# endif
+            status=nf90_put_att(DAV(ng)%ncid, nf90_global,              &
+     &                          'Algorithm', TRIM(string))
             IF (FoundError(status, nf90_noerr, __LINE__,                &
      &                     __FILE__)) THEN
               WRITE (stdout,50) 'type', TRIM(ncname)
@@ -1356,6 +1393,28 @@
             END IF
           END DO
           status=def_var(ng, iNLM, DAV(ng)%ncid, DAV(ng)%Vid(idOval),   &
+     &                   NF_FRST, 1, (/datumDim/), Aval, Vinfo, ncname)
+          IF (FoundError(exit_flag, NoError, __LINE__,                  &
+     &                   __FILE__)) RETURN
+        END IF
+!
+!  Observations meta value.
+!
+        IF (find_string(var_name,n_var,Vname(1,idOmet),vindex)) THEN
+          CALL netcdf_inq_var (ng, iNLM, OBS(ng)%name,                  &
+     &                         ncid = OBSncid,                          &
+     &                         MyVarName = TRIM(Vname(1,idOmet)),       &
+     &                         nVarDim = nvdim,                         &
+     &                         nVarAtt = nvatt)
+          IF (FoundError(exit_flag, NoError, __LINE__,                  &
+     &                   __FILE__)) RETURN
+          Vinfo(1)=TRIM(Vname(1,idOmet))
+          DO i=1,nvatt
+            IF (TRIM(var_Aname(i)).eq.'long_name') THEN
+              Vinfo(2)=TRIM(var_Achar(i))
+            END IF
+          END DO
+          status=def_var(ng, iNLM, DAV(ng)%ncid, DAV(ng)%Vid(idOmet),   &
      &                   NF_FRST, 1, (/datumDim/), Aval, Vinfo, ncname)
           IF (FoundError(exit_flag, NoError, __LINE__,                  &
      &                   __FILE__)) RETURN

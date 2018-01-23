@@ -10,7 +10,7 @@ CONTAINS
      &          ,acsnom,acsnow,snowfallac,akhs,akms,albedo,br,canwat  &
      &          ,chklowq,dt,dx,dz8w,dzs,glw                           &
      &          ,grdflx,gsw,swdown,gz1oz0,hfx,ht,ifsnow,isfflx        &
-#ifdef SWAN_COUPLING
+#if defined SWAN_COUPLING || defined WW3_COUPLING
      &          ,hwave, lwavep, pwave                                 &
 #endif
      &          ,fractional_seaice,seaice_albedo_opt                  &
@@ -628,7 +628,7 @@ CONTAINS
    REAL, DIMENSION( ims:ime , jms:jme ), INTENT(INOUT)::   GSW,SWDOWN
    REAL, DIMENSION( ims:ime , jms:jme ), INTENT(IN )::   HT
    REAL, DIMENSION( ims:ime , jms:jme ), INTENT(IN )::   RAINCV
-#ifdef SWAN_COUPLING
+#if defined SWAN_COUPLING || defined WW3_COUPLING
    REAL, DIMENSION( ims:ime , jms:jme ), INTENT(IN)::   HWAVE
    REAL, DIMENSION( ims:ime , jms:jme ), INTENT(IN)::   LWAVEP
    REAL, DIMENSION( ims:ime , jms:jme ), INTENT(IN)::   PWAVE
@@ -2029,7 +2029,7 @@ CONTAINS
                 chs,chs2,cqs2,hfx,qfx,lh,flhc,flqc,qgh,cpm,ct,       &
                 u10,v10,t2,th2,tshltr,th10,q2,qshltr,q10,pshltr,               &
                 p1000mb,                                             &
-#ifdef SWAN_COUPLING
+#if defined SWAN_COUPLING || defined WW3_COUPLING
                 hwave, lwavep, pwave,                                &
 #endif
                 ids,ide, jds,jde, kds,kde,                           &

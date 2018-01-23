@@ -75,7 +75,7 @@ CONTAINS
      &                 ,QGH,CPM,CT                                     &
      &                 ,U10,V10,T02,TH02,TSHLTR,TH10,Q02,QSHLTR,Q10,PSHLTR          &
      &                 ,P1000mb                                        &
-#ifdef SWAN_COUPLING
+#if defined SWAN_COUPLING || defined WW3_COUPLING
      &                 ,HWAVE, LWAVEP, PWAVE                           &
 #endif
      &                 ,IDS,IDE,JDS,JDE,KDS,KDE                        &
@@ -124,8 +124,7 @@ CONTAINS
      &                                              ,QGH
 !
       REAL,INTENT(IN) :: P1000mb
-
-#ifdef SWAN_COUPLING
+#if defined SWAN_COUPLING || defined WW3_COUPLING
       REAL,DIMENSION(IMS:IME,JMS:JME),INTENT(IN) :: HWAVE, LWAVEP, PWAVE
 #endif
 
@@ -152,7 +151,7 @@ CONTAINS
       REAL,DIMENSION(ITS:ITE,JTS:JTE) :: THSK
 !
       REAL,DIMENSION(ITS:ITE,KTS:KTE+1,JTS:JTE) :: ZINT
-#ifdef SWAN_COUPLING
+#if defined SWAN_COUPLING || defined WW3_COUPLING
       REAL :: HWAVE_L, LWAVEP_L, PWAVE_L
 #endif
 !
@@ -315,7 +314,7 @@ CONTAINS
           TZ0=THZ0(I,J)*APESFC
        endif
 !
-#ifdef SWAN_COUPLING
+#if defined SWAN_COUPLING || defined WW3_COUPLING
           HWAVE_L=HWAVE(i,j)
           LWAVEP_L=LWAVEP(i,j)
           PWAVE_L=PWAVE(i,j)
@@ -332,7 +331,7 @@ CONTAINS
      &               ,ZSL,PLOW                                         &
      &               ,U10(I,J),V10(I,J),TSHLTR(I,J),TH10(I,J)          &
      &               ,QSHLTR(I,J),Q10(I,J),PSHLTR(I,J)                 &
-#ifdef SWAN_COUPLING
+#if defined SWAN_COUPLING || defined WW3_COUPLING
      &               ,HWAVE_L, LWAVEP_L, PWAVE_L                       &
 #endif
      &               ,IDS,IDE,JDS,JDE,KDS,KDE                          &
@@ -472,7 +471,7 @@ CONTAINS
         DO ITR=1,ITRMX
 !----------------------------------------------------------------------
 
-#if defined SWAN_COUPLING
+#if defined SWAN_COUPLING || defined WW3_COUPLING
 # if defined COARE_TAYLOR_YELLAND
           Z0=MAX(1200.0*HWAVE*                                          &
      &                 (HWAVE/(LWAVEP+0.001))**4.5+                     &

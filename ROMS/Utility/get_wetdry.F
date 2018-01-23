@@ -2,7 +2,7 @@
 #ifdef WET_DRY
       SUBROUTINE get_wetdry (ng, model, IniRec)
 !
-!svn $Id: get_wetdry.F 873 2017-10-05 20:27:10Z arango $
+!svn $Id: get_wetdry.F 875 2017-11-03 01:10:02Z arango $
 !================================================== Hernan G. Arango ===
 !  Copyright (c) 2002-2017 The ROMS/TOMS Group                         !
 !    Licensed under a MIT/X style license                              !
@@ -158,6 +158,11 @@
         exit_flag=2
         ioerror=status
         RETURN
+      ELSE
+        IF (Master) THEN
+          WRITE (stdout,40) TRIM(Vname(2,idPwet)), ng, TRIM(ncname),    &
+     &                      Fmin, Fmax
+        END IF
       END IF
 !
 !  Read in wet/dry mask at RHO-points.
@@ -177,6 +182,11 @@
         exit_flag=2
         ioerror=status
         RETURN
+      ELSE
+        IF (Master) THEN
+          WRITE (stdout,40) TRIM(Vname(2,idRwet)), ng, TRIM(ncname),    &
+     &                      Fmin, Fmax
+        END IF
       END IF
 !
 !  Read in wet/dry mask at U-points.
@@ -196,6 +206,11 @@
         exit_flag=2
         ioerror=status
         RETURN
+      ELSE
+        IF (Master) THEN
+          WRITE (stdout,40) TRIM(Vname(2,idUwet)), ng, TRIM(ncname),    &
+     &                      Fmin, Fmax
+        END IF
       END IF
 !
 !  Read in wet/dry mask at V-points.
@@ -215,6 +230,11 @@
         exit_flag=2
         ioerror=status
         RETURN
+      ELSE
+        IF (Master) THEN
+          WRITE (stdout,40) TRIM(Vname(2,idVwet)), ng, TRIM(ncname),    &
+     &                      Fmin, Fmax
+        END IF
       END IF
 !
 !  Exchange boundary data.
@@ -251,6 +271,9 @@
      &        /,14x,'in grid NetCDF file: ',a)
   30  FORMAT (/,' GET_WETDRY - error while reading variable: ',a,       &
      &        /,12x,'in grid NetCDF file: ',a)
+  40  FORMAT (3x,' GET_WETDRY  - ',a,/,19x,                             &
+     &        '(Grid = ',i2.2,', File: ',a,')',/,19x,                   &
+     &        '(Min = ', 1p,e15.8,0p,' Max = ',1p,e15.8,0p,')')
 #else
       SUBROUTINE get_wetdry
 #endif

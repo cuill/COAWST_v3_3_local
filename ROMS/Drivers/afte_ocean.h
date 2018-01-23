@@ -1,6 +1,6 @@
       MODULE ocean_control_mod
 !
-!svn $Id: afte_ocean.h 858 2017-07-31 23:02:30Z arango $
+!svn $Id: afte_ocean.h 875 2017-11-03 01:10:02Z arango $
 !================================================== Hernan G. Arango ===
 !  Copyright (c) 2002-2017 The ROMS/TOMS Group       Andrew M. Moore   !
 !    Licensed under a MIT/X style license                              !
@@ -581,7 +581,7 @@
                       nullify (ad_state(ng)%vector)
                     END IF
                     state(ng)%vector => STORAGE(ng)%Rvector(Is:Ie,i)
-                    ad_state(ng)%vector => STORAGE(ng)%SworkD(Is:Ie)
+                    ad_state(ng)%vector => SworkR(Is:Ie)
                   END DO
 
 !$OMP PARALLEL
@@ -610,7 +610,7 @@
                       nullify (ad_state(ng)%vector)
                     END IF
                     state(ng)%vector => STORAGE(ng)%Rvector(Is:Ie,i+1)
-                    ad_state(ng)%vector => STORAGE(ng)%SworkD(Is:Ie)
+                    ad_state(ng)%vector => SworkR(Is:Ie)
                   END DO
 
 !$OMP PARALLEL

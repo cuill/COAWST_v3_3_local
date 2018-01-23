@@ -653,7 +653,27 @@
           END DO
 # endif
 #endif
-
+!
+!  Reset global reduction variables for the next call.
+!
+          volume=0.0_r8
+          avgke=0.0_r8
+          avgpe=0.0_r8
+          maxspeed(ng)=-Large
+#ifdef SOLVE3D
+          maxrho(ng)=-Large
+#endif
+          max_C =0.0_r8
+          max_Cu=0.0_r8
+          max_Cv=0.0_r8
+#ifdef SOLVE3D
+          max_Cw=0.0_r8
+#endif
+          max_Ci=0
+          max_Cj=0
+#ifdef SOLVE3D
+          max_Ck=0
+#endif
         END IF
 !$OMP END CRITICAL (NL_DIAGNOSTICS)
       END IF

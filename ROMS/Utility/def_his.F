@@ -1712,7 +1712,7 @@
      &                   __FILE__)) RETURN
         END IF
 # endif
-# if defined BULK_FLUXES || defined ECOSIM || defined ATM2OCN_FLUXES
+# if defined BULK_FLUXES || defined ECOSIM || defined AIR_OCEAN
 !
 !  Define surface u-wind component.
 !
@@ -1820,7 +1820,7 @@
           END IF
         END DO
 
-# if defined BULK_FLUXES || defined ATM2OCN_FLUXES
+# if defined BULK_FLUXES || defined AIR_OCEAN
 !
 !  Define latent heat flux.
 !
@@ -5149,7 +5149,7 @@
           RETURN
         END IF
 # endif
-# if defined BULK_FLUXES || defined ECOSIM || defined ATM2OCN_FLUXES
+# if defined BULK_FLUXES || defined ECOSIM || defined AIR_OCEAN
         IF (.not.got_var(idUair).and.Hout(idUair,ng)) THEN
           IF (Master) WRITE (stdout,70) TRIM(Vname(1,idUair)),          &
      &                                  TRIM(ncname)
@@ -5175,7 +5175,7 @@
           RETURN
         END IF
 # endif
-# if defined BULK_FLUXES || defined ATM2OCN_FLUXES
+# if defined BULK_FLUXES || defined AIR_OCEAN
         IF (.not.got_var(idLhea).and.Hout(idLhea,ng)) THEN
           IF (Master) WRITE (stdout,70) TRIM(Vname(1,idLhea)),          &
      &                                  TRIM(ncname)

@@ -79,7 +79,7 @@ ifdef USE_MPI
  ifdef USE_MPIF90
                FC := mpif90
   ifdef USE_DEBUG
-           FFLAGS += -mpe=mpicheck
+           FFLAGS += #-mpe=mpicheck
   endif
  else
   # MPI without mpif90 is not currently supported
@@ -128,6 +128,11 @@ ifdef USE_WRF
              LIBS += WRF/frame/pack_utils.o
              LIBS += WRF/external/io_netcdf/libwrfio_nf.a
 #            LIBS += WRF/external/io_netcdf/wrf_io.o
+endif
+
+ifdef USE_WW3
+             FFLAGS += -I${COAWST_WW3_DIR}/mod_DIST/
+             LIBS += WW3/obj/libWW3.a
 endif
 
 #
@@ -181,7 +186,6 @@ endif
 #
 
 ifdef USE_SWAN
-
 $(SCRATCH_DIR)/ocpcre.o: FFLAGS += -ffixed-form
 $(SCRATCH_DIR)/ocpids.o: FFLAGS += -ffixed-form
 $(SCRATCH_DIR)/ocpmix.o: FFLAGS += -ffixed-form
@@ -199,6 +203,7 @@ $(SCRATCH_DIR)/swanpre2.o: FFLAGS += -ffixed-form
 $(SCRATCH_DIR)/swanser.o: FFLAGS += -ffixed-form
 $(SCRATCH_DIR)/swmod1.o: FFLAGS += -ffixed-form
 $(SCRATCH_DIR)/swmod2.o: FFLAGS += -ffixed-form
+$(SCRATCH_DIR)/SwanSpectPart.o:  FFLAGS += -ffixed-form
 $(SCRATCH_DIR)/m_constants.o: FFLAGS += -ffree-form -ffree-line-length-none
 $(SCRATCH_DIR)/m_fileio.o:    FFLAGS += -ffree-form -ffree-line-length-none
 $(SCRATCH_DIR)/mod_xnl4v5.o:  FFLAGS += -ffree-form -ffree-line-length-none
@@ -206,6 +211,7 @@ $(SCRATCH_DIR)/serv_xnl4v5.o: FFLAGS += -ffree-form -ffree-line-length-none
 $(SCRATCH_DIR)/nctablemd.o:   FFLAGS += -ffree-form -ffree-line-length-none
 $(SCRATCH_DIR)/agioncmd.o:    FFLAGS += -ffree-form -ffree-line-length-none
 $(SCRATCH_DIR)/swn_outnc.o:   FFLAGS += -ffree-form -ffree-line-length-none
+$(SCRATCH_DIR)/SdsBabanin.o:  FFLAGS += -ffree-form -ffree-line-length-none
 $(SCRATCH_DIR)/SwanBpntlist.o:  FFLAGS += -ffree-form -ffree-line-length-none
 $(SCRATCH_DIR)/SwanCheckGrid.o: FFLAGS += -ffree-form -ffree-line-length-none
 $(SCRATCH_DIR)/SwanCompdata.o:  FFLAGS += -ffree-form -ffree-line-length-none

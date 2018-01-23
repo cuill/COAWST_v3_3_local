@@ -1,7 +1,7 @@
 #include "cppdefs.h"
       SUBROUTINE read_PhyPar (model, inp, out, Lwrite)
 !
-!svn $Id: read_phypar.F 873 2017-10-05 20:27:10Z arango $
+!svn $Id: read_phypar.F 877 2017-11-15 04:04:42Z arango $
 !================================================== Hernan G. Arango ===
 !  Copyright (c) 2002-2017 The ROMS/TOMS Group                         !
 !    Licensed under a MIT/X style license                              !
@@ -970,10 +970,10 @@
               Npts=load_i(Nval, Rval, Ngrids, Vstretching)
               DO ng=1,Ngrids
                 IF ((Vstretching(ng).lt.0).or.                          &
-     &              (Vstretching(ng).gt.4)) THEN
+     &              (Vstretching(ng).gt.5)) THEN
                   IF (Master) WRITE (out,260) 'Vstretching = ',         &
      &                                        Vstretching(ng),          &
-     &                                        'Must between 1 and 4'
+     &                                        'Must between 1 and 5'
                   exit_flag=5
                   RETURN
                 END IF
@@ -7850,9 +7850,17 @@
           fname=varname
           IF (.not.find_file(ng, fname, 'VARNAME')) GO TO 30
           GO TO 40
-  30      IF (Master) WRITE (out,270) ng, TRIM(fname)
+  30      IF (Master) THEN
+            IF (LEN_TRIM(fname).eq.0) THEN
+              WRITE (out,270) ng, 'Oops unassigned file name. '//       &
+     &                            'Check standard input script...'
+            ELSE
+              WRITE (out,270) ng, TRIM(fname)
+            END IF
+          END IF
           exit_flag=4
-          RETURN
+          IF (FoundError(exit_flag, NoError, __LINE__,                  &
+     &                   __FILE__)) RETURN
   40      CONTINUE
         END DO
         IF (Nuser.gt.0) THEN

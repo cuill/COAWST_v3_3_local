@@ -2,7 +2,7 @@
 #if (defined FOUR_DVAR || defined VERIFICATION) && defined OBSERVATIONS
       SUBROUTINE obs_initial (ng, model, backward)
 !
-!svn $Id: obs_initial.F 873 2017-10-05 20:27:10Z arango $
+!svn $Id: obs_initial.F 880 2017-11-15 22:04:38Z arango $
 !================================================== Hernan G. Arango ===
 !  Copyright (c) 2002-2017 The ROMS/TOMS Group                         !
 !    Licensed under a MIT/X style license                              !
@@ -117,6 +117,10 @@
           ELSE IF (TRIM(var_name(i)).eq.TRIM(Vname(1,idOval))) THEN
             got_var(idOval)=.TRUE.
             OBS(ng)%Vid(idOval)=var_id(i)
+          ELSE IF (TRIM(var_name(i)).eq.TRIM(Vname(1,idOmet))) THEN
+            got_var(idOmet)=.TRUE.
+            haveObsMeta(ng)=.TRUE.
+            OBS(ng)%Vid(idOmet)=var_id(i)
           END IF
         END DO
 !
@@ -252,7 +256,7 @@
 !  written into the initial NetCDF file.
 !
       IF (.not.backward) THEN
-        DO i=0,NstateVar(ng)
+        DO i=0,NobsVar(ng)
           FOURDVAR(ng)%ObsCost(i)=0.0_r8
         END DO
       END IF

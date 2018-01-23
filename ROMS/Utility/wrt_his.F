@@ -2560,7 +2560,7 @@
         END IF
       END IF
 # endif
-# if defined BULK_FLUXES || defined ATM2OCN_FLUXES || defined ECOSIM
+# if defined BULK_FLUXES || defined AIR_OCEAN || defined ECOSIM
 !
 !  Write out surface winds.
 !
@@ -2704,7 +2704,7 @@
           END IF
         END IF
       END DO
-# if defined BULK_FLUXES || defined ATM2OCN_FLUXES
+# if defined BULK_FLUXES || defined AIR_OCEAN
 !
 !  Write out latent heat flux.
 !

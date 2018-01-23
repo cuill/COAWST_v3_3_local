@@ -37,7 +37,7 @@ RECURSIVE SUBROUTINE integrate ( grid )
    USE atm_coupler_mod, ONLY: atm2ocn_coupling
    USE atm_coupler_mod, ONLY: atmfocn_coupling
 # endif
-# ifdef SWAN_COUPLING
+# if defined SWAN_COUPLING || defined WW3_COUPLING
    USE atm_coupler_mod, ONLY: atm2wav_coupling
    USE atm_coupler_mod, ONLY: atmfwav_coupling
 # endif

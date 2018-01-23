@@ -2,7 +2,7 @@
       SUBROUTINE inquiry (ng, model, job, Iout, Irec, Mrec, ifield,     &
      &                    ncid, Lmulti, nfiles, S)
 !
-!svn $Id: inquiry.F 873 2017-10-05 20:27:10Z arango $
+!svn $Id: inquiry.F 884 2017-12-06 01:59:26Z arango $
 !================================================== Hernan G. Arango ===
 !  Copyright (c) 2002-2017 The ROMS/TOMS Group                         !
 !    Licensed under a MIT/X style license                              !
@@ -131,6 +131,7 @@
      &                     __FILE__)) RETURN
             IF (label(1:3).eq.'FRC') THEN
               FRCids(ifile,ng)=-1
+              S(ifile)%ncid=-1
             END IF
             EXIT
           ELSE                       ! S(ifile)%name and Fcount already
@@ -433,7 +434,7 @@
           IF (Irec.eq.1) THEN
             Tindex=Iout
           ELSE
-            Tindex=1
+            Tindex=Iinfo(8,ifield,ng)
           END IF
           IF (Liocycle) THEN
             IF (Trec.eq.nrec) THEN

@@ -1,6 +1,6 @@
       MODULE ocean_control_mod
 !
-!svn $Id: fte_ocean.h 858 2017-07-31 23:02:30Z arango $
+!svn $Id: fte_ocean.h 875 2017-11-03 01:10:02Z arango $
 !================================================== Hernan G. Arango ===
 !  Copyright (c) 2002-2017 The ROMS/TOMS Group       Andrew M. Moore   !
 !    Licensed under a MIT/X style license                              !
@@ -584,7 +584,7 @@
                       nullify (tl_state(ng)%vector)
                     END IF
                     state(ng)%vector => STORAGE(ng)%Rvector(Is:Ie,i)
-                    tl_state(ng)%vector => STORAGE(ng)%SworkD(Is:Ie)
+                    tl_state(ng)%vector => SworkR(Is:Ie)
                   END DO
 
 !$OMP PARALLEL
@@ -613,7 +613,7 @@
                       nullify (tl_state(ng)%vector)
                     END IF
                     state(ng)%vector => STORAGE(ng)%Rvector(Is:Ie,i+1)
-                    tl_state(ng)%vector => STORAGE(ng)%SworkD(Is:Ie)
+                    tl_state(ng)%vector => SworkR(Is:Ie)
                   END DO
 
 !$OMP PARALLEL

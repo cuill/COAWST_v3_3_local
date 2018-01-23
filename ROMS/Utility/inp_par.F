@@ -1,7 +1,7 @@
 #include "cppdefs.h"
       SUBROUTINE inp_par (model)
 !
-!svn $Id: inp_par.F 858 2017-07-31 23:02:30Z arango $
+!svn $Id: inp_par.F 885 2017-12-27 23:18:30Z arango $
 !================================================== Hernan G. Arango ===
 !  Copyright (c) 2002-2017 The ROMS/TOMS Group                         !
 !    Licensed under a MIT/X style license                              !
@@ -1243,7 +1243,16 @@
 !
 !=======================================================================
 !                                                                      !
-!  This function decodes lines of text from input script files.        !
+!  This function decodes lines of text from input script files. It is  !
+!  to evaluate ROMS unique namelist parameters.                        !
+!                                                                      !
+!  Arguments:                                                          !
+!                                                                      !
+!    line_text      Input scripts lines as text (string)               !
+!    KeyWord        Input parameter keyword (string)                   !
+!    Nval           Number of values processed (integer)               !
+!    Cval           Input values as characters (string array)          !
+!    Rval           Input values as mumbers (real array)               !
 !                                                                      !
 !=======================================================================
 !
@@ -1478,6 +1487,8 @@
       USE mod_netcdf
       USE mod_scalars
 !
+      USE strings_mod,   ONLY : FoundError
+!
       implicit none
 !
 !  Imported variable declarations.
@@ -1491,7 +1502,7 @@
 !
       logical :: foundit, isURL
 
-      integer :: ncid
+      integer :: lstr, ncid
 !
       SourceFile=__FILE__ // ", find_file"
 !
@@ -1503,13 +1514,16 @@
 !
 !  Check for empty file name string.
 !
-      IF (LEN_TRIM(fname).eq.0) THEN
+      lstr=LEN_TRIM(fname)
+      IF (lstr.eq.0) THEN
         IF (Master) THEN
           WRITE (stdout,10) TRIM(KeyWord)
- 10       FORMAT (/,' INP_PAR - empty file name string for ',           &
-     &            'input script KeyWord: ',a)
+ 10       FORMAT (/,' INP_PAR:FIND_FILE - empty file name string ',     &
+     &            'for standard input script KeyWord: ',a)
         END IF
         exit_flag=5
+        IF (FoundError(exit_flag, NoError, __LINE__,                    &
+     &                 __FILE__)) RETURN
       END IF
 !
 !  Check if provided file is a URL.  This implies the file is a NetCDF
