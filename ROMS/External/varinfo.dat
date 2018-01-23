@@ -9089,11 +9089,11 @@
   1.0d0
 !
 !------------------------------------------------------------------------------
-!  WAVE Thrust model for marshes variables.
+! Marsh wave induced erosion variables.
 !------------------------------------------------------------------------------
 !
-'marsh_mask'                                      ! Input/Output
-  'Input masking for getting thrust due to waves at rho pts.'
+'marsh_mask'                                       ! Input/Output
+  'Store masking marsh for marsh cells.'
   'nondimensional'     
   'marsh_mask, scalar, series'
   'ocean_time'
@@ -9101,29 +9101,29 @@
   'r2dvar' 
   1.0d0
 
-'mask_thrust'                                      ! Output
-  'Masking for getting thrust due to waves at rho pts.'
-  'nondimensional'     
-  'mask_thrust, scalar, series'
+'Thrust_total'                                     ! Output
+  'Total thrust in all directions due to waves.'
+  'kilonewtons meter-1 '                           ! [kN/m]
+  'Thrust_total, scalar, series'
   'ocean_time'
-  'idTmsk'
+  'idTtot'
+  'r2dvar'
+  1.0d0
+
+'marsh_flux_out_'                                  ! Output
+  'Marsh sediment flux out from marsh cells.' 
+  'kg'                                             ! [kg]
+  'marsh_flux_out_, scalar, series'
+  'ocean_time'
+  'idTmfo'
+  'r2dvar'
+   1.0d0
+
+'marsh_retreat'                                    ! Output
+  'Amount of marsh retreat from all directions.'
+  'm'     
+  'marsh_retreat, scalar, series'                  ! [m]
+  'ocean_time'
+  'idTmmr'
   'r2dvar' 
-  1.0d0
-
-'Thrust_max'                                       ! Output
-  'Maximum thrust due to waves'
-  'kilonewtons/m '                                 ! [kN/m]
-  'Thrust_w_wet, scalar, series'
-  'ocean_time'
-  'idTmax'
-  'r2dvar'
-  1.0d0
-
-'Thrust_tonelli'                                   ! Output
-  'Tonelli masking based thrust due to waves'
-  'kilonewtons/m'                                  ! [kN/m]
-  'Thrust_tonelli, scalar, series'
-  'ocean_time'
-  'idTton'
-  'r2dvar'
-  1.0d0
+   1.0d0
