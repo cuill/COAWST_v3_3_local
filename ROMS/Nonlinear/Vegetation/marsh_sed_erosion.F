@@ -231,6 +231,7 @@
 !
 !---------------------------------------------------------------------
 ! Sediment flux for each sediment class out of marsh cells
+! (in kg)
 !---------------------------------------------------------------------
 !
               marsh_flux_out(i,j,ised)=cff4+marsh_flux_out(i,j,ised)

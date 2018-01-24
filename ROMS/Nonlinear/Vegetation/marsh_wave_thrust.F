@@ -274,6 +274,7 @@
 !----------------------------------------------------------------------
 !  Compute total thrust on all cell centers
 !  where wave data is available at RHO points.
+!  Thrust has units of kN
 !----------------------------------------------------------------------
 !
       DO j=Jstr-1,Jend+1
