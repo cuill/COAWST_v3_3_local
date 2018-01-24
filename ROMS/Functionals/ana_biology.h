@@ -152,8 +152,10 @@
       USE mod_ncparam
       USE mod_iounits
       USE mod_scalars
+
 !
-      USE stats_mod, ONLY : stats_3dfld
+!Comment out for now:
+!      USE stats_mod, ONLY : stats_3dfld
 !
 !  Imported variable declarations.
 !
@@ -284,7 +286,8 @@
 !
 !   Maximum 80 biological tracers consider for field statistics.
 !
-      TYPE (T_STATS), save :: Stats(80)
+!Comment out for now:
+!      TYPE (T_STATS), save :: Stats(80)
 
 #include "set_bounds.h"
 !
@@ -292,16 +295,17 @@
 !  Initialize field statistics structure.
 !-----------------------------------------------------------------------
 !
-      IF (first) THEN
-        first=.FALSE.
-        DO i=1,SIZE(Stats,1)
-          Stats(i) % count=0.0_r8
-          Stats(i) % min=Large
-          Stats(i) % max=-Large
-          Stats(i) % avg=0.0_r8
-          Stats(i) % rms=0.0_r8
-        END DO
-      END IF
+!Comment out for now:
+!      IF (first) THEN
+!        first=.FALSE.
+!        DO i=1,SIZE(Stats,1)
+!          Stats(i) % count=0.0_r8
+!          Stats(i) % min=Large
+!          Stats(i) % max=-Large
+!          Stats(i) % avg=0.0_r8
+!          Stats(i) % rms=0.0_r8
+!        END DO
+!      END IF
 
 #if defined BIO_FENNEL
 !
@@ -335,7 +339,7 @@
             t(i,j,k,1,iLDeN)=0.02_r8
             t(i,j,k,1,iSDeN)=0.04_r8
             t(i,j,k,1,iChlo)=0.02_r8
-            t(i,j,k,1,iOxyg)=0.00_r8
+!            t(i,j,k,1,iOxyg)=0.00_r8
 #ifdef CARBON
             t(i,j,k,1,iTIC_)=2100.0_r8
             t(i,j,k,1,iTAlk)=2350.0_r8
@@ -344,6 +348,9 @@
 #endif
 #ifdef OXYGEN
             t(i,j,k,1,iOxyg)=10.0_r8/0.02241_r8
+#endif
+#ifdef ODU
+            t(i,j,k,1,iODU_)=0.0_r8
 #endif
           END DO
         END DO
@@ -657,20 +664,21 @@
 !
 !  Report statistics.
 !
-      DO itrc=1,NBT
-        i=idbio(itrc)
-        CALL stats_3dfld (ng, tile, iNLM, u3dvar, Stats(itrc),          &
-     &                    LBi, UBi, LBj, UBj, 1, N(ng), t(:,:,:,1,i))
-        IF (DOMAIN(ng)%NorthEast_Corner(tile)) THEN
-          WRITE (stdout,10) TRIM(Vname(2,idTvar(i)))//': '//            &
-     &                      TRIM(Vname(1,idTvar(i))),                   &
-     &                      ng, Stats(itrc)%min, Stats(itrc)%max
-        END IF
-      END DO
+!Comment out for now:
+!      DO itrc=1,NBT
+!        i=idbio(itrc)
+!        CALL stats_3dfld (ng, tile, iNLM, u3dvar, Stats(itrc),          &
+!     &                    LBi, UBi, LBj, UBj, 1, N(ng), t(:,:,:,1,i))
+!        IF (DOMAIN(ng)%NorthEast_Corner(tile)) THEN
+!          WRITE (stdout,10) TRIM(Vname(2,idTvar(i)))//': '//            &
+!     &                      TRIM(Vname(1,idTvar(i))),                   &
+!     &                      ng, Stats(itrc)%min, Stats(itrc)%max
+!        END IF
+!      END DO
+!!
+!  10  FORMAT (3x,' ANA_BIOLOGY - ',a,/,19x,                             &
+!     &        '(Grid = ',i2.2,', Min = ',1p,e15.8,0p,                   &
+!     &                         ' Max = ',1p,e15.8,0p,')')
 !
-  10  FORMAT (3x,' ANA_BIOLOGY - ',a,/,19x,                             &
-     &        '(Grid = ',i2.2,', Min = ',1p,e15.8,0p,                   &
-     &                         ' Max = ',1p,e15.8,0p,')')
-
       RETURN
       END SUBROUTINE ana_biology_tile
