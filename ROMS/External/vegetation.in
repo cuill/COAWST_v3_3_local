@@ -48,6 +48,10 @@
 
     VEGHMIXCOEF  == 0.0d0
 
+    KFAC_MARSH == 0.6d-9
+
+    DCRIT_MARSH == 0.0d0
+
 ! Logical switches (TRUE/FALSE) to activate writing of vegetation fields
 ! into HISTORY output file: [1:NVEG,Ngrids].
 
@@ -77,3 +81,7 @@ Hout(idTton)   == T       ! Thrust_tonelli     Tonelli masking based thrust due 
 !  VEG_MASSDENS   Mass density for each vegetation type
 !
 !  VEGHMIXCOEF    Mixing coefficient
+!
+!  KFAC_MARSH     Marsh erosion factor depends on sediment cohesive properties
+!
+!  DCRIT_MARSH    Critical bed thickness after which marsh mask=0 (i.e. No longer a marsh)
