@@ -239,6 +239,7 @@
         IF (Dout(ifield,ng)) THEN
           IF (ivar.eq.ipCO2) THEN
             scale=1.0_r8
+#  if defined SEDBIO_COUP
           ELSEIF ((ivar.eq.iseO2).or.(ivar.eq.isdO2)) THEN
             scale=1.0_r8/(dt(ng)*sec2day)
           ELSEIF ((ivar.eq.iseNO).or.(ivar.eq.isdNO)) THEN
@@ -247,6 +248,7 @@
             scale=1.0_r8/(dt(ng)*sec2day)
           ELSEIF ((ivar.eq.iseOD).or.(ivar.eq.isdOD)) THEN
             scale=1.0_r8/(dt(ng)*sec2day)
+#  endif
           ELSE
             scale=1.0_r8/dtBIO                       ! mmole m-2 day-1
           END IF
