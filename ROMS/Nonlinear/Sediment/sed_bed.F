@@ -5,9 +5,9 @@
 #if defined NONLINEAR && defined SEDIMENT  && !defined COHESIVE_BED \
                      && !defined MIXED_BED && !defined NONCOHESIVE_BED2
 !
-!svn $Id: sed_bed.F 830 2017-01-24 21:21:11Z arango $
+!svn $Id: sed_bed.F 429 2009-12-20 17:30:26Z arango $
 !==================================================== John C. Warner ===
-!  Copyright (c) 2002-2017 The ROMS/TOMS Group      Hernan G. Arango   !
+!  Copyright (c) 2002-2016 The ROMS/TOMS Group      Hernan G. Arango   !
 !    Licensed under a MIT/X style license                              !
 !    See License_ROMS.txt                                              !
 !=======================================================================
@@ -60,11 +60,11 @@
 !  Add the bed mass change in bottom cell due to marsh erosion.
 !-----------------------------------------------------------------------
 !
-      CALL marsh_sed_erosion (ng, tile)
+!      CALL marsh_sed_erosion (ng, tile)
 #endif 
 !
 # ifdef PROFILE
-      CALL wclock_on (ng, iNLM, 16, __LINE__, __FILE__)
+      CALL wclock_on (ng, iNLM, 16)
 # endif
       CALL sed_bed_tile (ng, tile,                                      &
      &                   LBi, UBi, LBj, UBj,                            &
@@ -91,6 +91,7 @@
 # endif
 # if defined SED_MORPH
      &                   SEDBED(ng) % bed_thick,                        &
+     &                   SEDBED(ng) % bed_poros,                        &
 # endif
 # if defined MARSH_SED_EROSION 
      &                   VEG(ng) % marsh_mask,                          &
@@ -100,7 +101,7 @@
      &                   SEDBED(ng) % bed_mass,                         &
      &                   SEDBED(ng) % bottom)
 # ifdef PROFILE
-      CALL wclock_off (ng, iNLM, 16, __LINE__, __FILE__)
+      CALL wclock_off (ng, iNLM, 16)
 # endif
       RETURN
       END SUBROUTINE sed_bed
@@ -126,6 +127,7 @@
 # endif
 # if defined SED_MORPH
      &                         bed_thick,                               &
+     &                         bed_poros,                               &
 # endif
 # if defined MARSH_SED_EROSION 
      &                         marsh_mask,                              &
@@ -168,6 +170,7 @@
 #  endif
 #  if defined SED_MORPH
       real(r8), intent(inout):: bed_thick(LBi:,LBj:,:)
+      real(r8), intent(inout):: bed_poros(LBi:,LBj:)
 #  endif
 #  if defined MARSH_SED_EROSION
       real(r8), intent(in):: marsh_mask(LBi:,LBj:)
@@ -198,6 +201,7 @@
 #  endif
 #  if defined SED_MORPH
       real(r8), intent(inout):: bed_thick(LBi:UBi,LBj:UBj,2)
+      real(r8), intent(inout):: bed_poros(LBi:UBi,LBj:UBj)
 #  endif
 #  if defined MARSH_SED_EROSION 
       real(r8), intent(inout):: marsh_mask(LBi:UBi,LBj:UBj)
@@ -367,6 +371,7 @@
 !
           DO k=1,Nbed
             cff3=0.0_r8
+            cff4=0.0_r8 
             DO ised=1,NST
               cff3=cff3+bed_mass(i,j,k,nnew,ised)
             END DO
@@ -380,6 +385,7 @@
      &                         bed_mass(i,j,k,nnew,ised)/               &
      &                         (Srho(ised,ng)*                          &
      &                          (1.0_r8-bed(i,j,k,iporo))),0.0_r8)
+!
             END DO
           END DO
         END DO
@@ -513,17 +519,33 @@
 # if defined SED_MORPH
       DO j=JstrR,JendR
         DO i=IstrR,IendR
-            bed_thick(i,j,nnew)=0.0_r8
-            DO k=1,Nbed
-              bed_thick(i,j,nnew)=bed_thick(i,j,nnew)+                  &
+          bed_thick(i,j,nnew)=0.0_r8
+          DO k=1,Nbed
+            bed_thick(i,j,nnew)=bed_thick(i,j,nnew)+                    &
      &                            bed(i,j,k,ithck)
-            END DO
           END DO
         END DO
+      END DO
+!
+! Effective bed porosity for all the bed layers added up
+! 
+      DO j=JstrR,JendR
+        DO i=IstrR,IendR
+          bed_poros(i,j)=0.0_r8
+          DO k=1,Nbed
+            bed_poros(i,j)=bed_poros(i,j)+                              &
+     &                            bed(i,j,k,iporo)
+          END DO
+        END DO
+      END DO
+!
         IF (EWperiodic(ng).or.NSperiodic(ng)) THEN
           CALL exchange_r2d_tile (ng, tile,                             &
      &                            LBi, UBi, LBj, UBj,                   &
      &                            bed_thick(:,:,nnew))
+          CALL exchange_r2d_tile (ng, tile,                             &
+     &                            LBi, UBi, LBj, UBj,                   &
+     &                            bed_poros(:,:))
         END IF
 # endif
 !
