@@ -41,6 +41,10 @@
       USE mod_sedbed
       USE mod_stepping
       USE mod_bbl
+# if defined MARSH_SED_EROSION
+      USE mod_vegarr
+      USE marsh_sed_erosion_mod, ONLY : marsh_sed_erosion
+# endif
 !
 !  Imported variable declarations.
 !
@@ -76,6 +80,9 @@
 # if defined SED_MORPH
      &                      SEDBED(ng) % bed_thick,                     &
 # endif
+# if defined MARSH_SED_EROSION
+     &                      VEG(ng) % marsh_mask,                       &
+# endif
      &                      SEDBED(ng) % bed,                           &
      &                      SEDBED(ng) % bed_frac,                      &
      &                      SEDBED(ng) % bed_mass,                      &
@@ -104,6 +111,9 @@
      &                            ero_flux, settling_flux,              &
 # if defined SED_MORPH
      &                            bed_thick,                            &
+# endif
+# if defined MARSH_SED_EROSION
+     &                            marsh_mask,                           &
 # endif
      &                            bed, bed_frac, bed_mass,              &
      &                            bottom)
@@ -138,6 +148,9 @@
 #  if defined SED_MORPH
       real(r8), intent(inout):: bed_thick(LBi:,LBj:,:)
 #  endif
+#  if defined MARSH_SED_EROSION
+      real(r8), intent(in) :: marsh_mask(LBi:,LBj:)
+#  endif
       real(r8), intent(inout) :: t(LBi:,LBj:,:,:,:)
       real(r8), intent(inout) :: ero_flux(LBi:,LBj:,:)
       real(r8), intent(inout) :: settling_flux(LBi:,LBj:,:)
@@ -161,6 +174,9 @@
       real(r8), intent(in) :: bvstr(LBi:UBi,LBj:UBj)
 #  if defined SED_MORPH
       real(r8), intent(inout):: bed_thick(LBi:UBi,LBj:UBj,2)
+#  endif
+#  if defined MARSH_SED_EROSION
+      real(r8), intent(in) :: marsh_mask(LBi:UBi,LBj:UBj)
 #  endif
       real(r8), intent(inout) :: t(LBi:UBi,LBj:UBj,N(ng),3,NT(ng))
       real(r8), intent(inout) :: ero_flux(LBi:UBi,LBj:UBj,NST)
@@ -250,7 +266,11 @@
 !  Compute erosion, ero_flux (kg/m2).
 !
             cff1=(1.0_r8-bed(i,j,1,iporo))*bed_frac(i,j,1,ised)
+# if defined MARSH_SED_EROSION
+            cff2=dt(ng)*Erate(ised,ng)*cff1*(1.0_r8-marsh_mask(i,j))
+# else
             cff2=dt(ng)*Erate(ised,ng)*cff1
+# endif
             cff3=Srho(ised,ng)*cff1
             cff4=bed_mass(i,j,1,bnew,ised)
             cff5=settling_flux(i,j,ised) !CRS
