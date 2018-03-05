@@ -96,6 +96,9 @@
 # if defined MARSH_SED_EROSION 
      &                   VEG(ng) % marsh_mask,                          &
 # endif
+# if defined NO_MUDFLAT_EROSION
+     &                   GRID(ng) % h,                                  &
+# endif
      &                   SEDBED(ng) % bed,                              &
      &                   SEDBED(ng) % bed_frac,                         &
      &                   SEDBED(ng) % bed_mass,                         &
@@ -131,6 +134,9 @@
 # endif
 # if defined MARSH_SED_EROSION 
      &                         marsh_mask,                              &
+# endif
+# if defined NO_MUDFLAT_EROSION
+     &                         h,                                       &
 # endif
      &                         bed, bed_frac, bed_mass,                 &
      &                         bottom)
@@ -175,6 +181,9 @@
 #  if defined MARSH_SED_EROSION
       real(r8), intent(in):: marsh_mask(LBi:,LBj:)
 #  endif
+#  if defined NO_MUDFLAT_EROSION
+      real(r8), intent(in):: h(LBi:,LBj:)
+#  endif
       real(r8), intent(inout) :: t(LBi:,LBj:,:,:,:)
 #  ifdef SUSPLOAD
       real(r8), intent(inout) :: ero_flux(LBi:,LBj:,:)
@@ -205,6 +214,9 @@
 #  endif
 #  if defined MARSH_SED_EROSION 
       real(r8), intent(inout):: marsh_mask(LBi:UBi,LBj:UBj)
+#  endif
+#  if defined NO_MUDFLAT_EROSION
+      real(r8), intent(in):: h(LBi:UBi,LBj:UBj)
 #  endif
       real(r8), intent(inout) :: t(LBi:UBi,LBj:UBj,N(ng),3,NT(ng))
 #  ifdef SUSPLOAD
@@ -422,8 +434,14 @@
 !
           bottom(i,j,iactv)=bottom(i,j,iactv)*(1.0_r8-marsh_mask(i,j)) 
 #  endif
-# endif
+#  if defined NO_MUDFLAT_EROSION
 !
+! Apply mudflat mask to prohibit marsh sediment from suspension.
+!
+          bottom(i,j,iactv)=bottom(i,j,iactv)*                          &
+     &       (-1.0_r8/(1.0_r8+exp(10000.0_r8*(h(i,j)+0.7_r8))))+1.0_r8
+#  endif
+# endif
           IF (bottom(i,j,iactv).gt.bed(i,j,1,ithck)) THEN
             IF (Nbed.eq.1) THEN
               bottom(i,j,iactv)=bed(i,j,1,ithck)

@@ -304,7 +304,6 @@
           F_msl=F_asl+F_bsl
           FX(i,j)=F_msl*cos(cff)
           FY(i,j)=F_msl*sin(cff)
-! 
         END DO
       END DO
 !

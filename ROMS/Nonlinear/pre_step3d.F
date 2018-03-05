@@ -564,6 +564,34 @@
               IF (LtracerSrc(itrc,ng).and.                              &
      &            ((Istr.le.Isrc).and.(Isrc.le.Iend+1)).and.            &
      &            ((Jstr.le.Jsrc).and.(Jsrc.le.Jend+1))) THEN
+#  ifdef TS_BBLEH_PSOUT
+! Modified for BBLEH OCNG power plant intake
+! See notes in step3d_t.F
+!
+             IF (is.eq.12) THEN
+!               write(*,'(/a,i3,i4,i4,i4,i4,f10.2,f10.2/)')
+!               &
+!     &         '(PRE)intake is,i,j,itrc,k,T,t= ',is,i,j,itrc,k,
+!     &
+!     &         Tsrc(is,k,itrc),t(i,j,k,nstp,itrc)
+!               SOURCES(ng)%Tsrc(is,k,itrc)=t(i,j,k,nstp,itrc)
+               SOURCES(ng)%Tsrc(is,k,itrc)=t(Isrc,Jsrc,k,nstp,itrc)
+             END IF
+             IF (is.eq.11) THEN
+!               SOURCES(ng)%Tsrc(is,k,itrc)=t(i-1,j+4,k,nstp,itrc)
+               SOURCES(ng)%Tsrc(is,k,itrc)=t(Isrc-1,Jsrc+4,k,nstp,itrc)
+             END IF
+             IF ((is.eq.17).and.(itrc.eq.2)) THEN
+!              write(*,'(/a,i3,i4,i4,i4,i4,f10.2,f10.2/)')
+!              &
+!    &         '(PRE)outflow is,i,j,itrc,k,T,t= ',is,i,j,itrc,k,
+!    &
+!    &         Tsrc(is,k,itrc),t(i-1,j+4,k,nstp,itrc)
+!               SOURCES(ng)%Tsrc(is,k,itrc)=t(i-2,j+4,k,nstp,itrc)
+               SOURCES(ng)%Tsrc(is,k,itrc)=t(Isrc-2,Jsrc+4,k,nstp,itrc)
+             END IF
+!write(6,*) "pre_step3d edited Tsrc: ",itrc,LtracerSrc(itrc,ng)
+#  endif
                 IF (INT(SOURCES(ng)%Dsrc(is)).eq.0) THEN
                   FX(Isrc,Jsrc)=Huon(Isrc,Jsrc,k)*                      &
 #  ifdef ONE_TRACER_SOURCE

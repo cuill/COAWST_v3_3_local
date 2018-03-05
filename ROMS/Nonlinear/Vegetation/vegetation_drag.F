@@ -6,7 +6,7 @@
 !
 !svn $Id: vegetation_drag.F 429 2015-05-26 10:10:26Z arango $
 !=======================================================================
-!  Copyright (c) 2002-2017 The ROMS/TOMS Group                         !
+!  Copyright (c) 2002-2016 The ROMS/TOMS Group                         !
 !    Licensed under a MIT/X style license           Hernan G. Arango   !
 !    See License_ROMS.txt                   Alexander F. Shchepetkin   !
 !==================================================== John C. Warner ===
@@ -97,6 +97,12 @@
       USE mod_scalars
       USE mod_vegetation
       USE mod_vegarr
+      USE exchange_2d_mod
+      USE exchange_3d_mod
+# ifdef DISTRIBUTE
+      USE mp_exchange_mod, ONLY : mp_exchange2d,                       &
+     &                            mp_exchange3d, mp_exchange4d
+# endif
 !
 !  Imported variable declarations.
 !
@@ -217,7 +223,8 @@
 !
 ! Blade bending angle
 !
-              bend(i,j,iveg)=ACOSD(cflex**one_third)
+              bend(i,j,iveg)=ACOS(cflex**one_third)*57.296_r8
+
 # else
 !
 ! For stiff vegetation
@@ -243,6 +250,20 @@
             END DO
           END DO
 !
+! Exchange boundary data 
+!
+      IF (EWperiodic(ng).or.NSperiodic(ng)) THEN
+        CALL exchange_r2d_tile (ng, tile,                               &
+     &                          LBi, UBi, LBj, UBj,                     &
+     &                          wrk)
+      ENDIF
+
+        CALL mp_exchange2d (ng, tile, iNLM, 1,                          &
+     &                    LBi, UBi, LBj, UBj,                           &
+     &                    NghostPoints,                                 &
+     &                    EWperiodic(ng), NSperiodic(ng),               &
+     &                    wrk(:,:)) 
+!
 ! Compute friction force (at cell faces)
 !
           DO j=Jstr,Jend
@@ -265,12 +286,13 @@
 # ifdef WET_DRY
               cff4=cff*0.5_r8*(Hz(i-1,j,k)+Hz(i,j,k))
               ru_veg(i,j,k)=SIGN(1.0_r8, ru_veg(i,j,k))*                &
-     &               MIN(ABS(ru_veg(i,j,k)),                            &
-     &                   ABS(u(i,j,k,nrhs))*cff4)
+     &                           MIN(ABS(ru_veg(i,j,k)),                &
+     &                               ABS(u(i,j,k,nrhs))*cff4)
 # endif
-
+!
             END DO
           END DO
+!
           DO j=JstrV,Jend
             DO i=Istr,Iend
               cff1=0.25_r8*(u(i  ,j  ,k,nrhs)+                          &
@@ -289,14 +311,49 @@
 # ifdef WET_DRY
               cff4=cff*0.5_r8*(Hz(i,j-1,k)+Hz(i,j,k))
               rv_veg(i,j,k)=SIGN(1.0_r8, rv_veg(i,j,k))*                &
-     &               MIN(ABS(rv_veg(i,j,k)),                            &
-     &                   ABS(v(i,j,k,nrhs))*cff4)
+     &                           MIN(ABS(rv_veg(i,j,k)),                &
+     &                               ABS(v(i,j,k,nrhs))*cff4)
 # endif
-
+!
             END DO
           END DO
         END DO K_LOOP
       END DO VEG_LOOP
+!
+! Exchange boundary data 
+!
+      IF (EWperiodic(ng).or.NSperiodic(ng)) THEN
+        DO iveg=1,NVEG
+          CALL exchange_u3d_tile (ng, tile,                             &
+     &                          LBi, UBi, LBj, UBj, 1, N(ng),           &
+     &                          ru_loc_veg(:,:,:,iveg))
+          CALL exchange_v3d_tile (ng, tile,                             &
+     &                          LBi, UBi, LBj, UBj, 1, N(ng),           &
+     &                          rv_loc_veg(:,:,:,iveg))
+        END DO 
+        CALL exchange_u3d_tile (ng, tile,                               &
+     &                          LBi, UBi, LBj, UBj, 1, N(ng),           &
+     &                          ru_veg(:,:,:))
+        CALL exchange_v3d_tile (ng, tile,                               &
+     &                          LBi, UBi, LBj, UBj, 1, N(ng),           &
+     &                          rv_veg(:,:,:))
+      END IF
+!
+# ifdef DISTRIBUTE
+!
+      CALL mp_exchange4d (ng, tile, iNLM, 2,                            &
+     &                    LBi, UBi, LBj, UBj, 1, N(ng), 1, NVEG,        &
+     &                    NghostPoints,                                 &
+     &                    EWperiodic(ng), NSperiodic(ng),               &
+     &                    ru_loc_veg(:,:,:,:),                          &
+     &                    rv_loc_veg(:,:,:,:))
+!
+      CALL mp_exchange3d (ng, tile, iNLM, 2,                            &
+     &                    LBi, UBi, LBj, UBj, 1, N(ng),                 &
+     &                    NghostPoints,                                 &
+     &                    EWperiodic(ng), NSperiodic(ng),               &
+     &                    ru_veg, rv_veg)
+# endif
 !
 !-----------------------------------------------------------------------
 !  Add in resistance imposed on the flow by the vegetation (3D->2D).

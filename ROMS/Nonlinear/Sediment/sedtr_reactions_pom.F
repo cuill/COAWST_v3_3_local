@@ -186,7 +186,7 @@
 !
       J_LOOP : DO j=Jstr,Jend
         I_LOOP : DO i=Istr,Iend
-          K_LOOP : DO k=1,Nbed-1
+          K_LOOP : DO k=1,Nbed
 
 !
 !-----------------------------------------------------------------------
@@ -216,6 +216,12 @@
              no3=bed(i,j,k,ibno3)/pwConv
              nh4=bed(i,j,k,ibnh4)/pwConv
              odu=bed(i,j,k,ibodu)/pwConv
+!IF ((i.eq.3).and.(j.eq.3).and.(k.eq.1)) THEN
+!write(6,*) "bed_oxy: ",o2
+!write(6,*) "bed_no3: ",no3
+!write(6,*) "bed_nh4: ",nh4
+!write(6,*) "bed_odu: ",odu
+!END IF
              DO ised=1,NST
                IF (sed_rxn(ised,ng).ne.0.0_r8) THEN
                  oc(ised)=bed_mass(i,j,k,nnew,ised)*kg2mmolC/sConv

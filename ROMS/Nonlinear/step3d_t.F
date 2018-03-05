@@ -630,6 +630,34 @@
             DO is=1,Nsrc(ng)
               Isrc=SOURCES(ng)%Isrc(is)
               Jsrc=SOURCES(ng)%Jsrc(is)
+# if defined TS_BBLEH_PSOUT
+! Modified for BBLEH OCNG (power plant) intake
+! 12 is index of river from which water is pulled out of 
+!    (dir=1 for eta), Dsrc=1
+!    (14,442) is the river index of the intake
+!
+! That water is re-directed into two rivers (indexes 11 and 17) 
+! that are co-located:
+! 17 is index of river into which water flows after power plant 
+!    (dir=0 for xi), Dsrc=0
+!    (15,438) is the river index of the outflow from power plant
+!    Temperature is heated up because water was used to cool 
+!    down instruments in the power plant.
+! 11 is index of river into which water flows if it by-passes
+!    the power plant (so it is not heated up, and retains all 
+!    of the properties from river #12). 
+!
+! if segment below is run TS is swapped at the same time step
+! t(i,j,k,3,itrc). Else TS from pre_step3d.F is used (nstp).
+             IF ((is.eq.11)) THEN
+!             write(*,*) 'outflow rno, i and j =',is, i, j
+!             write(*,*) 'Salt from pre_step', Tsrc(is,k,itrc)
+!                         SOURCES(ng)%Tsrc(is,k,itrc)=t(i-1,j+4,k,3,itrc)
+                   SOURCES(ng)%Tsrc(is,k,itrc)=t(Isrc-1,Jsrc+4,k,3,itrc)
+!             write(*,*) 'Salt intake at this tstep',
+!             t(i-1,j+4,k,3,itrc)
+             END IF
+# endif
               IF (INT(SOURCES(ng)%Dsrc(is)).eq.0) THEN
 # if defined TS_MPDATA || defined TS_HSIMT
                 IF (((IstrUm2.le.Isrc).and.(Isrc.le.Iendp3)).and.       &
@@ -639,6 +667,7 @@
      &              ((Jstr.le.Jsrc).and.(Jsrc.le.Jend))) THEN
 # endif
                   IF (LtracerSrc(itrc,ng)) THEN
+!write(6,*) "step3dt FX river tracer: ",itrc,LtracerSrc(itrc,ng)
                     FX(Isrc,Jsrc)=Huon(Isrc,Jsrc,k)*                    &
 # ifdef ONE_TRACER_SOURCE
      &                      SOURCES(ng)%Tsrc(itrc)
@@ -669,7 +698,20 @@
                 IF (((Istr.le.Isrc).and.(Isrc.le.Iend)).and.            &
      &              ((Jstr.le.Jsrc).and.(Jsrc.le.Jend+1))) THEN
 # endif
+# if defined TS_BBLEH_PSOUT
+             IF (is.eq.12) THEN
+!             write(*,*) 'intake rno, i, j, T =',is, i, j,
+!             t(i,j,k,3,itrc)
+!             SOURCES(ng)%Tsrc(is,k,itrc)=t(i,j,k,3,itrc)
+             SOURCES(ng)%Tsrc(is,k,itrc)=t(Isrc,Jsrc,k,3,itrc)
+             END IF
+             IF ((is.eq.17).and.(itrc.eq.2)) THEN
+!                         SOURCES(ng)%Tsrc(is,k,itrc)=t(i-2,j+4,k,3,itrc)
+                   SOURCES(ng)%Tsrc(is,k,itrc)=t(Isrc-2,Jsrc+4,k,3,itrc)
+             END IF
+# endif
                   IF (LtracerSrc(itrc,ng)) THEN
+!write(6,*) "step3dt FE river tracer: ",itrc,LtracerSrc(itrc,ng)
                     FE(Isrc,Jsrc)=Hvom(Isrc,Jsrc,k)*                    &
 # ifdef ONE_TRACER_SOURCE
      &                      SOURCES(ng)%Tsrc(itrc)

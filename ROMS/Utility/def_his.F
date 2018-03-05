@@ -2867,6 +2867,16 @@
 !  Define sediment properties in each bed layer.
 !
         DO i=1,MBEDP
+!write(6,*) "JMM idSbed counter:", idSbed(i)
+!write(6,*) "JMM Hout:", Hout(idSbed(i),ng)
+!write(6,*) "JMM Vname 1:", Vname(1,idSbed(i))
+!write(6,*) "JMM Vname 2:", Vname(2,idSbed(i))
+!write(6,*) "JMM Vname 3:", Vname(3,idSbed(i))
+!write(6,*) "JMM Vname 14:", Vname(4,idSbed(i))
+!write(6,*) "JMM Vname 16:", Vname(1,idtime)
+!write(6,*) "JMM Vid:", HIS(ng)%Vid(idSbed(i))
+!write(6,*) "JMM ncid:", HIS(ng)%ncid
+!write(6,*) "JMM ncname:", ncname
           IF (Hout(idSbed(i),ng)) THEN
             Vinfo( 1)=Vname(1,idSbed(i))
             Vinfo( 2)=Vname(2,idSbed(i))
