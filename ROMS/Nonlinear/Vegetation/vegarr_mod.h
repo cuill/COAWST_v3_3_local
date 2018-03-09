@@ -39,7 +39,8 @@
 !  tke_veg        Turbulent kinetic energy from vegetation             !
 !  gls_veg        Length scale change from vegetation                  !
 # endif
-# if defined VEG_SWAN_COUPLING && defined VEG_STREAMING
+!!!# if defined VEG_SWAN_COUPLING && defined VEG_STREAMING
+# if defined VEG_STREAMING
 !  dissip_veg     Dissipation from the SWAN model due to vegetation    !
 !  BWDXL_veg      Wave streaming effect due to vegetation              !
 !  BWDYL_veg      Wave streaming effect due to vegetation              !
@@ -97,7 +98,8 @@
         real(r8), pointer :: visc2d_r_veg(:,:)
         real(r8), pointer :: visc3d_r_veg(:,:,:)
 # endif 
-# if defined VEG_SWAN_COUPLING && defined VEG_STREAMING
+!!!# if defined VEG_SWAN_COUPLING && defined VEG_STREAMING
+# if defined VEG_STREAMING
         real(r8), pointer :: dissip_veg(:,:)
         real(r8), pointer :: BWDXL_veg(:,:,:)
         real(r8), pointer :: BWDYL_veg(:,:,:)
@@ -175,7 +177,8 @@
       allocate ( VEG(ng) % gls_veg(LBi:UBi,LBj:UBj,N(ng)) )
 #  endif
 # endif
-#  if defined VEG_SWAN_COUPLING && defined VEG_STREAMING
+!!#  if defined VEG_SWAN_COUPLING && defined VEG_STREAMING
+#  if defined VEG_STREAMING
       allocate ( VEG(ng) % dissip_veg(LBi:UBi,LBj:UBj) )
       allocate ( VEG(ng) % BWDXL_veg(LBi:UBi,LBj:UBj,N(ng)) )
       allocate ( VEG(ng) % BWDYL_veg(LBi:UBi,LBj:UBj,N(ng)) )
@@ -337,7 +340,8 @@
         END DO 
 #  endif
 !  
-#  if defined VEG_SWAN_COUPLING && defined VEG_STREAMING 
+!!!#  if defined VEG_SWAN_COUPLING && defined VEG_STREAMING 
+#  if defined VEG_STREAMING 
         DO j=Jmin,Jmax
           DO i=Imin,Imax
             VEG(ng) % dissip_veg(i,j) = IniVal
