@@ -101,6 +101,8 @@
 # if defined SEDTR_REACTIONS
 #  if defined SEDBIO_COUP
     USE sedtr_reactions_pom_mod, ONLY : sedtr_reactions_pom
+#  elif defined SEDTR_DECAY
+    USE sedtr_decay_mod, ONLY : sedtr_decay
 #  endif
 # endif
 !
@@ -170,6 +172,8 @@
 # if defined SEDTR_REACTIONS
 #  if defined SEDBIO_COUP
       CALL sedtr_reactions_pom (ng, tile)
+#  elif defined SEDTR_DECAY
+      CALL sedtr_decay (ng, tile)
 #  endif
 # endif
 !

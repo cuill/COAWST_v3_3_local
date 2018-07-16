@@ -428,7 +428,7 @@
           bottom(i,j,iactv)=MAX(bottom(i,j,iactv)*morph_fac(1,ng),      &
      &                          bottom(i,j,iactv))
 !
-#  if defined MARSH_SED_EROSION 
+#  if defined MARSH_SED_EROSION & defined NO_MARSH_EROSION 
 !
 ! Apply marsh mask to prohibit marsh sediment from suspension.
 !
@@ -438,8 +438,7 @@
 !
 ! Apply mudflat mask to prohibit marsh sediment from suspension.
 !
-          bottom(i,j,iactv)=bottom(i,j,iactv)*                          &
-     &       (-1.0_r8/(1.0_r8+exp(10000.0_r8*(h(i,j)+0.7_r8))))+1.0_r8
+          if (h(i,j)<-0.7) bottom(i,j,iactv)=0.0_r8
 #  endif
 # endif
           IF (bottom(i,j,iactv).gt.bed(i,j,1,ithck)) THEN

@@ -408,7 +408,7 @@
           tstar=Taucwmax(i,j)/(Taucr+eps)
           IF (tstar.lt.1.0_r8) THEN                         ! no motion
             zoST(i,j)=0.0_r8
-            zoBF(i,j)=ar*rheight(i,j)**2/rlength(i,j)
+            zoBF(i,j)=ar*rheight(i,j)**2.0_r8/rlength(i,j)
           ELSE
 !
 !  Threshold of motion exceeded - calculate new zoST and zoBF
@@ -458,7 +458,7 @@
 !
 !  Value of ar can range from 0.3 to 3 (Soulsby, 1997, p. 124)
 !
-             zoBF(i,j)=ar*rheight(i,j)**2/rlength(i,j)
+             zoBF(i,j)=ar*rheight(i,j)**2.0_r8/rlength(i,j)
           END IF
           zo=zoN(i,j)
 # ifdef SSW_ZOBL

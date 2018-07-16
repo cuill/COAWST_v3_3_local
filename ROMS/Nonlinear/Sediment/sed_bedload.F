@@ -123,7 +123,8 @@
 # if defined MARSH_SED_EROSION 
      &                       VEG(ng) % marsh_mask,                      &
 # endif
-# if defined BEDLOAD_MPM || defined BEDLOAD_SOULSBY || defined NO_MARSH_EROSION
+# if defined BEDLOAD_MPM || defined BEDLOAD_SOULSBY \
+                         || defined NO_MUDFLAT_EROSION
      &                       GRID(ng) % h,                              &
 # endif
 # if defined BEDLOAD_MPM || defined BEDLOAD_SOULSBY
@@ -174,7 +175,8 @@
 # if defined MARSH_SED_EROSION 
      &                             marsh_mask,                          &
 # endif
-# if defined BEDLOAD_MPM || defined BEDLOAD_SOULSBY || defined NO_MUDFLAT_EROSION
+# if defined BEDLOAD_MPM || defined BEDLOAD_SOULSBY \
+                         || defined NO_MUDFLAT_EROSION
      &                             h,                                   &
 # endif
 # if defined BEDLOAD_MPM || defined BEDLOAD_SOULSBY
@@ -240,7 +242,8 @@
 #  if defined MARSH_SED_EROSION 
       real(r8), intent(in):: marsh_mask(LBi:,LBj:)
 #  endif
-#  if defined BEDLOAD_MPM || defined BEDLOAD_SOULSBY || defined NO_MUDFLAT_EROSION
+#  if defined BEDLOAD_MPM || defined BEDLOAD_SOULSBY \
+                          || defined NO_MUDFLAT_EROSION
       real(r8), intent(in) :: h(LBi:,LBj:)
 #  endif
 #  if defined BEDLOAD_MPM || defined BEDLOAD_SOULSBY
@@ -290,7 +293,8 @@
 #  if defined MARSH_SED_EROSION 
       real(r8), intent(inout):: marsh_mask(LBi:UBi,LBj:UBj)
 #  endif
-#  if defined BEDLOAD_MPM || defined BEDLOAD_SOULSBY || NO_MUDFLAT_EROSION
+#  if defined BEDLOAD_MPM || defined BEDLOAD_SOULSBY \
+                          || NO_MUDFLAT_EROSION
       real(r8), intent(in) :: h(LBi:UBi,LBj:UBj)
 #  endif
 #  if defined BEDLOAD_MPM || defined BEDLOAD_SOULSBY
@@ -600,7 +604,7 @@
             FX_r(i,j)=FX_r(i,j)*morph_fac(ised,ng)
             FE_r(i,j)=FE_r(i,j)*morph_fac(ised,ng)
 #  endif
-#  if defined MARSH_SED_EROSION 
+#  if defined MARSH_SED_EROSION & defined NO_MARSH_EROSION
 !
 ! Marsh cells do not participate in bed load calculation.
 !
@@ -611,10 +615,10 @@
 !
 ! Mudflat cells do not participate in bed load calculation.
 !
-            FX_r(i,j)=FX_r(i,j)*                                        &
-     &         (-1.0_r8/(1.0_r8+exp(10000.0_r8*(h(i,j)+0.7_r8))))+1.0_r8
-            FE_r(i,j)=FE_r(i,j)*                                        &
-     &         (-1.0_r8/(1.0_r8+exp(10000.0_r8*(h(i,j)+0.7_r8))))+1.0_r8
+             if (h(i,j)<-0.7) then
+             FX_r(i,j)=0.0_r8
+             FE_r(i,j)=0.0_r8
+             endif
 #  endif
 ! 
 ! Apply bedload transport rate coefficient. Also limit

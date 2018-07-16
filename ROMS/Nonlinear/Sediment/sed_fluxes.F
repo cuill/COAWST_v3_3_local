@@ -278,14 +278,13 @@
 !  Compute erosion, ero_flux (kg/m2).
 !
             cff1=(1.0_r8-bed(i,j,1,iporo))*bed_frac(i,j,1,ised)
-# if defined MARSH_SED_EROSION
+# if defined MARSH_SED_EROSION & defined NO_MARSH_EROSION
             cff2=dt(ng)*Erate(ised,ng)*cff1*(1.0_r8-marsh_mask(i,j))
 # else
             cff2=dt(ng)*Erate(ised,ng)*cff1
 # endif
 # if defined NO_MUDFLAT_EROSION
-            cff2=cff2*                                                  &
-     &        (-1.0_r8/(1.0_r8+exp(10000.0_r8*(h(i,j)+0.7_r8))))+1.0_r8
+            if (h(i,j)<-0.7_r8) cff2=0.0_r8
 # endif
             cff3=Srho(ised,ng)*cff1
             cff4=bed_mass(i,j,1,bnew,ised)

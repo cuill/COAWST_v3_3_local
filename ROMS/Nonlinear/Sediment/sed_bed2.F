@@ -507,7 +507,7 @@ minlayer_thick(ng) = newlayer_thick(ng)
      &                         dep_mass(i,ised),0.0_r8)
                           bed_mass(i,j,1,nnew,ised)=dep_mass(i,ised)
                        END DO
-# if defined SEDBIO_COUP
+# if defined SEDBIO_COUP && defined OXYGEN && defined ODU
                        DO ised=iboxy,ibodu
                           bed(i,j,2,ised)=                               &
      &                         bed(i,j,2,ised)+bed(i,j,1,ised)           &
@@ -545,7 +545,7 @@ minlayer_thick(ng) = newlayer_thick(ng)
      &                         bed_mass(i,j,Nbed-1,nnew,ised)+          &
      &                         bed_mass(i,j,Nbed  ,nnew,ised)
                        END DO
-# if defined SEDBIO_COUP
+# if defined SEDBIO_COUP && defined OXYGEN && defined ODU
                        DO ised=iboxy,ibodu
                           bed(i,j,Nbed,ised)=bed(i,j,Nbed-1,ised)+      &
      &                         bed(i,j,Nbed,ised)
@@ -560,7 +560,7 @@ minlayer_thick(ng) = newlayer_thick(ng)
                              bed_mass(i,j,k,nnew,ised)=                 &
      &                            bed_mass(i,j,k-1,nnew,ised)
                           END DO
-# if defined SEDBIO_COUP
+# if defined SEDBIO_COUP && defined OXYGEN && defined ODU
                           DO ised=iboxy,ibodu
                              bed(i,j,k,ised)=bed(i,j,k-1,ised)
                           END DO
@@ -573,7 +573,7 @@ minlayer_thick(ng) = newlayer_thick(ng)
      &                         dep_mass(i,ised),0.0_r8)
                           bed_mass(i,j,1,nnew,ised)=dep_mass(i,ised)
                        END DO
-# if defined SEDBIO_COUP
+# if defined SEDBIO_COUP && defined OXYGEN && defined ODU
                       DO ised=iboxy,ibodu
                            bed(i,j,2,ised)=                               &
      &                          bed(i,j,2,ised)-MAX(0.0_r8,               &
@@ -598,7 +598,7 @@ minlayer_thick(ng) = newlayer_thick(ng)
      &                      dep_mass(i,ised),0.0_r8)
                        bed_mass(i,j,1,nnew,ised)=dep_mass(i,ised)
                     END DO
-# if defined SEDBIO_COUP
+# if defined SEDBIO_COUP && defined OXYGEN && defined ODU
                     DO ised=iboxy,ibodu
                         bed(i,j,2,ised)=MAX(0.0_r8,                     &
      &                       bed(i,j,2,ised)+bed(i,j,1,ised)            &
@@ -633,7 +633,7 @@ minlayer_thick(ng) = newlayer_thick(ng)
      &                      dep_mass(i,ised),0.0_r8)
                        bed_mass(i,j,1,nnew,ised)=dep_mass(i,ised)
                     END DO
-# if defined SEDBIO_COUP
+# if defined SEDBIO_COUP && defined OXYGEN && defined ODU
                     DO ised=iboxy,ibodu
                         bed(i,j,2,ised)=MAX(0.0_r8,                     &
      &                       bed(i,j,2,ised)+bed(i,j,1,ised)            &
@@ -706,7 +706,7 @@ minlayer_thick(ng) = newlayer_thick(ng)
                 bed_mass(i,j,1   ,nnew,ised)=cff1-cff3
                 bed_mass(i,j,Ksed,nnew,ised)=cff3
               END DO
-# if defined SEDBIO_COUP
+# if defined SEDBIO_COUP && defined OXYGEN && defined ODU
               DO ised=iboxy,ibodu
                 cff1=0.0_r8
                 DO k=1,Ksed
@@ -750,7 +750,7 @@ minlayer_thick(ng) = newlayer_thick(ng)
                   bed_frac(i,j,k-ks,ised)=bed_frac(i,j,k,ised)
                   bed_mass(i,j,k-ks,nnew,ised)=bed_mass(i,j,k,nnew,ised)
                 END DO
-# if defined SEDBIO_COUP
+# if defined SEDBIO_COUP && defined OXYGEN && defined ODU
                 DO ised=iboxy,ibodu
                   bed(i,j,k-ks,ised)=bed(i,j,k,ised)
                 END DO
@@ -787,7 +787,7 @@ minlayer_thick(ng) = newlayer_thick(ng)
                      bed_mass(i,j,Nbed,nnew,ised)=                      &
      &                  bed_mass(i,j,Nbed-ks,nnew,ised)-nlysm(ised)
                   END DO
-# if defined SEDBIO_COUP
+# if defined SEDBIO_COUP && defined OXYGEN && defined ODU
                   DO ised=iboxy,ibodu
                      nlysm_diss(ised-iboxy+1)=newlayer_thick(ng)        &
      &                  /(MAX(eps,bed(i,j,Nbed-ks,ithck)))              &
@@ -804,7 +804,7 @@ minlayer_thick(ng) = newlayer_thick(ng)
                         bed_mass(i,j,k,nnew,ised)=                      &
      &                           nlysm(ised)/REAL(ks,r8)
                      END DO
-# if defined SEDBIO_COUP
+# if defined SEDBIO_COUP && defined OXYGEN && defined ODU
                      DO ised=iboxy,ibodu
                         bed(i,j,k,ised)=                                &
      &                    nlysm_diss(ised-iboxy+1)/REAL(ks,r8)
@@ -821,7 +821,7 @@ minlayer_thick(ng) = newlayer_thick(ng)
                         bed_mass(i,j,k,nnew,ised)=                      &
      &                             bed_mass(i,j,Nbed-ks,nnew,ised)*cff
                      END DO
-# if defined SEDBIO_COUP
+# if defined SEDBIO_COUP && defined OXYGEN && defined ODU
                      DO ised=iboxy,ibodu
                         bed(i,j,k,ised)= bed(i,j,Nbed-ks,ised)*cff
                      END DO 

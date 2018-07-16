@@ -277,7 +277,7 @@
             ENDDO
 ! TODO - Mix porosity or assign it as f(depth)?
 ! TODO - Mix age?
-# if defined SEDBIO_COUP
+# if defined SEDBIO_COUP && defined OXYGEN && defined ODU
 !
 !   Calculate mixing for each porewater constituent 
             DO ised=iboxy,ibodu
